@@ -7,11 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Markazi+Text:wght@500;600;700&display=swap" rel="stylesheet">
-<!-- المكتبات المطلوبة -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-<!-- مكتبة localForage لاستخدام IndexedDB بسهولة وأمان -->
-<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
 <style>
   :root{
     --bg: #0B0B10;
@@ -41,7 +36,6 @@
   button, input, textarea, select{ font-family:inherit; }
   .app{ height:100vh; height:100dvh; position:relative; overflow:hidden; }
 
-  /* ---------- Screens ---------- */
   .screen{
     position:absolute; inset:0;
     display:flex; flex-direction:column;
@@ -52,7 +46,6 @@
   .app.chat-open #screenGallery{ transform:translateX(-6%); filter:brightness(.7); }
   .app.chat-open #screenChat{ transform:translateX(0); }
 
-  /* ---------- Gallery ---------- */
   .gallery-top{
     padding:18px 18px 10px;
     display:flex; align-items:center; gap:10px;
@@ -136,9 +129,7 @@
     background:var(--panel);
     border:1.5px dashed var(--border);
   }
-  .g-card.add-card .plus{
-    font-size:30px; color:var(--accent);
-  }
+  .g-card.add-card .plus{ font-size:30px; color:var(--accent); }
   .g-card.add-card .lbl{ font-size:12.5px; color:var(--text-dim); margin-top:6px; }
 
   .gallery-empty{
@@ -147,9 +138,7 @@
   }
   .gallery-empty .big{ font-family:'Markazi Text', serif; font-size:24px; color:var(--text); margin-bottom:6px; }
 
-  .g-tabs{
-    display:flex; gap:8px; padding:0 14px 10px;
-  }
+  .g-tabs{ display:flex; gap:8px; padding:0 14px 10px; }
   .g-tab{
     background:var(--panel);
     border:1px solid var(--border);
@@ -164,7 +153,6 @@
     color:#fff; border-color:transparent; font-weight:600;
   }
 
-  /* ---------- Chat screen ---------- */
   #screenChat{ background:var(--bg); }
   .chat-header{
     padding:14px 14px;
@@ -193,7 +181,6 @@
     flex:1; overflow-y:auto;
     padding:18px 16px;
     display:flex; flex-direction:column; gap:12px;
-    scroll-behavior: smooth;
   }
   .chat-empty{
     margin:auto; text-align:center; color:var(--text-dim); max-width:280px;
@@ -207,13 +194,9 @@
     padding:11px 15px;
     border-radius:17px;
     font-size:14.5px;
+    white-space:pre-wrap;
     word-break:break-word;
   }
-  .bubble p { margin-bottom: 8px; }
-  .bubble p:last-child { margin-bottom: 0; }
-  .bubble em { color: #d4a5ff; font-style: italic; }
-  .bubble strong { font-weight: bold; color: #fff; }
-
   .msg-row.char .bubble{ background:var(--bubble-char); border-bottom-right-radius:5px; }
   .msg-row.user .bubble{ background:linear-gradient(135deg, var(--accent-dim), #3a2450); border-bottom-left-radius:5px; }
   .msg-row.system{ align-self:center; max-width:92%; }
@@ -245,7 +228,6 @@
   }
   .send-btn:disabled{ opacity:.4; cursor:not-allowed; }
 
-  /* ---------- Overlays / Modals ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(5,5,8,.7);
     display:none; align-items:flex-end; justify-content:center; z-index:50;
@@ -319,22 +301,18 @@
   .btn-primary{ background:linear-gradient(90deg, var(--accent), var(--accent-2)); color:#fff; font-weight:600; }
   .btn-ghost{ background:transparent; color:var(--text-dim); border:1px solid var(--border); }
   .btn-ghost:hover{ color:var(--text); border-color:var(--text-dim); }
-  .btn-block{ width:100%; }
   .modal-actions{ display:flex; gap:10px; margin-top:6px; }
   .modal-actions .btn{ flex:1; }
   .danger-row{ text-align:center; margin-top:14px; }
   .danger-row button{ background:none; border:none; color:var(--danger); font-size:12.5px; cursor:pointer; }
 
-  /* profile sheet */
   .profile-head{ text-align:center; padding:6px 0 18px; }
   .profile-avatar{
     width:84px; height:84px; border-radius:50%; margin:0 auto 12px;
     display:flex; align-items:center; justify-content:center; font-size:38px;
   }
   .profile-head h2{ font-family:'Markazi Text', serif; font-size:26px; }
-  .profile-stats{
-    display:flex; justify-content:center; gap:28px; margin-top:14px;
-  }
+  .profile-stats{ display:flex; justify-content:center; gap:28px; margin-top:14px; }
   .p-stat{ text-align:center; }
   .p-stat b{ display:block; font-size:16px; }
   .p-stat span{ font-size:11px; color:var(--text-dim); }
@@ -344,14 +322,49 @@
     white-space:pre-wrap;
   }
 
-  .msg-wrap{ display:flex; flex-direction:column; min-width:0; }
-  .msg-row.user .msg-wrap{ align-items:flex-end; }
-  .msg-acts{ display:flex; gap:2px; margin-top:3px; opacity:.55; }
-  .msg-acts button{ background:none; border:none; color:var(--text-dim); font-size:13px; padding:2px 7px; cursor:pointer; }
-  .msg-acts button:hover{ color:var(--text); }
-  .bubble ul,.bubble ol{ padding-inline-start:20px; }
-
   ::-webkit-scrollbar{ width:0; height:0; }
+
+  .modal-tabs{
+    display:flex; gap:5px; margin-bottom:16px;
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:11px; padding:4px;
+  }
+  .modal-tab{
+    flex:1; padding:8px 10px; text-align:center;
+    font-size:12.5px; color:var(--text-dim); cursor:pointer;
+    border-radius:8px; transition:background .15s, color .15s;
+    border:none; background:transparent; font-family:inherit;
+  }
+  .modal-tab.active{ background:var(--panel-2); color:var(--text); font-weight:600; }
+
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .bubble-wrap{ display:flex; flex-direction:column; max-width:100%; }
+  .msg-row.user .bubble-wrap{ align-items:flex-end; }
+  .msg-actions{
+    display:flex; gap:5px; margin-top:4px;
+    opacity:0; pointer-events:none; transition:opacity .15s;
+  }
+  .msg-row:hover .msg-actions,
+  .msg-row:focus-within .msg-actions{ opacity:1; pointer-events:auto; }
+  .msg-action-btn{
+    background:var(--panel); border:1px solid var(--border);
+    color:var(--text-dim); font-size:10.5px;
+    padding:3px 9px; border-radius:8px; cursor:pointer;
+  }
+  .msg-action-btn:hover{ color:var(--text); border-color:var(--text-dim); }
+  .msg-action-btn.danger:hover{ color:var(--danger); border-color:var(--danger); }
+
+  .prompt-hint{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:10px 12px; margin-bottom:8px;
+    font-size:11.5px; color:var(--text-dim); line-height:1.7;
+  }
+  .prompt-hint code{
+    background:var(--panel-2); color:var(--accent);
+    padding:1px 5px; border-radius:5px; font-size:11px;
+  }
 
   @media (min-width: 760px){
     .gallery-grid{ grid-template-columns:repeat(3, 1fr); }
@@ -362,12 +375,11 @@
 
 <div class="app" id="app">
 
-  <!-- ================= GALLERY SCREEN ================= -->
   <section class="screen" id="screenGallery">
     <div class="gallery-top">
       <div>
         <h1>رفقة</h1>
-        <div class="sub">الحفظ محلي وآمن (IndexedDB)</div>
+        <div class="sub">محادثاتك محفوظة على جهازك فقط</div>
       </div>
       <div class="spacer"></div>
       <button class="icon-btn" id="settingsBtn" title="الإعدادات">⚙</button>
@@ -378,7 +390,6 @@
     <div class="gallery-grid" id="galleryGrid"></div>
   </section>
 
-  <!-- ================= CHAT SCREEN ================= -->
   <section class="screen" id="screenChat">
     <div class="chat-header">
       <button class="back-btn" id="backBtn">→</button>
@@ -389,8 +400,7 @@
       </div>
       <div class="h-spacer"></div>
       <div class="h-actions">
-        <button class="icon-btn" id="exportChatBtn" title="تصدير المحادثة كنص">📄</button>
-        <button class="icon-btn" id="clearBtn" title="مسح المحادثة">🗑</button>
+        <button class="icon-btn" id="regenBtn" title="إعادة توليد آخر رد">↻</button>
         <button class="icon-btn" id="chatSettingsBtn" title="إعدادات المحادثة">⚗</button>
       </div>
     </div>
@@ -403,37 +413,58 @@
 
 </div>
 
-<!-- ============ Character create/edit sheet ============ -->
 <div class="overlay" id="charOverlay">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <h3 id="charModalTitle">شخصية جديدة</h3>
     <div class="sheet-sub">صف شخصيتها بدقة — كل تفصيلة تساعد بجودة الردود</div>
-    <div class="field">
-      <label>الاسم</label>
-      <input type="text" id="fName" placeholder="مثال: ليلي">
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="basic" type="button">أساسي</button>
+      <button class="modal-tab" data-tab="advanced" type="button">متقدم (Prompt)</button>
     </div>
-    <div class="field">
-      <label>الرمز واللون</label>
-      <div class="avatar-pick" id="avatarPick"></div>
+
+    <div class="tab-panel active" data-panel="basic">
+      <div class="field">
+        <label>الاسم</label>
+        <input type="text" id="fName" placeholder="مثال: ليلي">
+      </div>
+      <div class="field">
+        <label>الرمز واللون</label>
+        <div class="avatar-pick" id="avatarPick"></div>
+      </div>
+      <div class="field">
+        <label>وصف الشخصية والأسلوب</label>
+        <textarea id="fPersonality" placeholder="من هي؟ طباعها، أسلوب كلامها، اهتماماتها، علاقتها بالمستخدم…"></textarea>
+      </div>
     </div>
-    <div class="field">
-      <label>وصف الشخصية والأسلوب</label>
-      <textarea id="fPersonality" placeholder="من هي؟ طباعها، أسلوب كلامها، اهتماماتها، علاقتها بالمستخدم…"></textarea>
+
+    <div class="tab-panel" data-panel="advanced">
+      <div class="field">
+        <label>السيناريو (الموقف) — اختياري</label>
+        <textarea id="fScenario" placeholder="أين أنتما؟ ما الذي يحدث؟ مثال: أنتما في مقهى هادئ بعد منتصف الليل…"></textarea>
+        <small>يُضاف كسياق ثابت لكل جلسة محادثة.</small>
+      </div>
+      <div class="field">
+        <label>الرسالة الأولى للشخصية — اختياري</label>
+        <textarea id="fFirstMessage" placeholder="ما تقوله الشخصية تلقائياً عند فتح محادثة جديدة…"></textarea>
+        <small>تُرسل تلقائياً كأول رسالة عند فتح محادثة فارغة.</small>
+      </div>
+      <div class="field">
+        <label>أمثلة على الأسلوب (Example Dialogue) — اختياري</label>
+        <textarea id="fExamples" placeholder="مثال:&#10;المستخدم: مرحباً&#10;الشخصية: أهلاً! تأخرت عليّ…"></textarea>
+        <small>توجّه النموذج لأسلوب الحوار المطلوب دون التأثير على الرسائل الفعلية.</small>
+      </div>
+      <div class="field">
+        <label>برومبت مخصص (System Prompt) — اختياري</label>
+        <div class="prompt-hint">
+          اكتب هنا تعليماتك الكاملة للنموذج. استخدم <code>{{char}}</code> لاسم الشخصية و<code>{{user}}</code> للمستخدم.
+          إن تركته فارغاً، سيُستخدم البرومبت الافتراضي + الوصف أعلاه.
+        </div>
+        <textarea id="fCustomPrompt" placeholder="أنت {{char}}، شخصية في قصة تفاعلية…"></textarea>
+      </div>
     </div>
-    <div class="field">
-      <label>السيناريو / الموقف الحالي</label>
-      <textarea id="fScenario" placeholder="أين تجري القصة؟ ما الذي يجمعكما الآن؟"></textarea>
-    </div>
-    <div class="field">
-      <label>الرسالة الافتتاحية</label>
-      <textarea id="fGreeting" placeholder="أول رسالة تبدأ بها الشخصية المحادثة"></textarea>
-    </div>
-    <div class="field">
-      <label>أمثلة على أسلوب كلامها</label>
-      <textarea id="fExamples" placeholder="اكتب 2-3 جمل حقيقية تمثل نبرتها ومفرداتها"></textarea>
-      <small>هذه الأمثلة تحدد الأسلوب أكثر من الوصف وحده.</small>
-    </div>
+
     <div class="modal-actions">
       <button class="btn btn-ghost" id="charCancelBtn">إلغاء</button>
       <button class="btn btn-primary" id="charSaveBtn">حفظ</button>
@@ -443,8 +474,6 @@
     </div>
   </div>
 </div>
-
-<!-- ============ Profile sheet ============ -->
 <div class="overlay" id="profileOverlay">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -464,7 +493,6 @@
   </div>
 </div>
 
-<!-- ============ Chat settings sheet ============ -->
 <div class="overlay" id="chatSettingsOverlay">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -489,6 +517,17 @@
       <div class="range-labels"><span>متكرر</span><span>متنوع</span></div>
     </div>
 
+    <div class="field">
+      <label>عمق التفكير الداخلي <span class="val" id="csReasonVal">high</span></label>
+      <select id="csReason">
+        <option value="none">بلا تفكير (أسرع رد)</option>
+        <option value="low">تفكير خفيف</option>
+        <option value="medium">تفكير متوسط</option>
+        <option value="high" selected>تفكير عميق (الأفضل للعب الأدوار)</option>
+      </select>
+      <small>يُطبَّق على نماذج Mistral فقط التي تدعم التفكير. يستهلك توكنات أكثر.</small>
+    </div>
+
     <div class="toggle-row">
       <div>
         <div class="t-label">عرض تدريجي للنص</div>
@@ -500,23 +539,6 @@
       </label>
     </div>
 
-    <div class="toggle-row">
-      <div>
-        <div class="t-label">وصف الحركات بين *نجمتين*</div>
-        <div class="t-desc">يسمح للشخصية بالكتابة السردية مثل *تبتسم*</div>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="csActions">
-        <span class="slider-toggle"></span>
-      </label>
-    </div>
-
-    <div class="field" style="margin-top:14px;">
-      <label>ذكريات مثبتة</label>
-      <textarea id="csPinned" placeholder="حقائق لا تريد أن تنساها الشخصية أبداً، سطر لكل حقيقة"></textarea>
-      <small>تُرسل مع كل رد. مفيدة للتفاصيل المهمة عنك وعن علاقتكما.</small>
-    </div>
-
     <div class="modal-actions" style="margin-top:18px;">
       <button class="btn btn-ghost" id="csCancelBtn">إلغاء</button>
       <button class="btn btn-primary" id="csSaveBtn">حفظ</button>
@@ -524,26 +546,38 @@
   </div>
 </div>
 
-<!-- ============ Global settings sheet ============ -->
 <div class="overlay" id="settingsOverlay">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <h3>الإعدادات العامة</h3>
+
     <div class="field">
-      <label>مفتاح Gemini API</label>
-      <input type="password" id="apiKeyInput" placeholder="AIza...">
-      <small>يُحفظ فقط في متصفحك، ويُستخدم للاتصال المباشر بخوادم Google.
-        <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent);">الحصول على مفتاح</a>
-      </small>
+      <label>المزوّد (Provider)</label>
+      <select id="providerSelect">
+        <option value="mistral">Mistral AI (موصى به — مجاني)</option>
+        <option value="gemini">Google Gemini</option>
+      </select>
+      <small>عند تغيير المزود، بدّل المفتاح والنموذج المناسبين.</small>
     </div>
+
+    <div class="field">
+      <label>شخصيتك (Persona) — اختياري</label>
+      <textarea id="personaInput" placeholder="من أنت في هذه المحادثات؟ اسمك، صفاتك، أسلوبك، ما تريد للشخصيات أن تعرفه عنك…"></textarea>
+      <small>سياق ثابت عنك يُضاف لكل المحادثات.</small>
+    </div>
+
+    <div class="field">
+      <label>مفتاح API</label>
+      <input type="password" id="apiKeyInput" placeholder="sk-... أو AIza...">
+      <small id="apiKeyHelp">يُحفظ فقط في متصفحك. للحصول على مفتاح Mistral: <a href="https://console.mistral.ai/api-keys" target="_blank" style="color:var(--accent);">console.mistral.ai</a></small>
+    </div>
+
     <div class="field">
       <label>النموذج</label>
-      <select id="modelSelect">
-        <option value="gemini-pro-latest">Gemini pro Pro — أذكى، حصة يومية أقل</option>
-        <option value="gemini-flash-latest">Gemini flash latest — متوازن</option>
-        <option value="gemini-2.0-flash">Gemini 2.0 Flash — أسرع، حصة أكبر</option>
-      </select>
+      <select id="modelSelect"></select>
+      <small id="modelHelp"></small>
     </div>
+
     <div class="field">
       <label>عدد الرسائل المُرسلة كسياق</label>
       <select id="historySelect">
@@ -552,27 +586,6 @@
         <option value="40">آخر 40 رسالة</option>
         <option value="9999">كل المحادثة</option>
       </select>
-    </div>
-    
-    <div class="field">
-      <label>اسمك (Persona)</label>
-      <input type="text" id="perName" placeholder="كيف تناديك الشخصية؟">
-    </div>
-    <div class="field">
-      <label>نبذة عنك</label>
-      <textarea id="perAbout" placeholder="عمرك، اهتماماتك، أي شيء تريد أن تعرفه الشخصية عنك"></textarea>
-    </div>
-    
-    <div class="toggle-row" style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
-      <div>
-        <div class="t-label">نسخة احتياطية (Backup)</div>
-        <div class="t-desc">احفظ بياناتك أو استعدها لتجنب فقدانها</div>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn btn-ghost" id="exportBtn" style="padding:8px 12px; font-size:12px;">تصدير</button>
-        <button class="btn btn-ghost" id="importBtn" style="padding:8px 12px; font-size:12px;">استيراد</button>
-        <input type="file" id="importFile" accept=".json" style="display:none;">
-      </div>
     </div>
 
     <div class="modal-actions">
@@ -583,7 +596,7 @@
 </div>
 
 <script>
-(async function(){
+(function(){
   "use strict";
 
   const AVATARS = ["🙂","😊","🌙","🌸","🦊","🐺","🌊","🔥","⭐","🍃","🎭","☕","🖤","💫","🐦","🌵"];
@@ -598,50 +611,47 @@
     "linear-gradient(160deg,#1f394d,#0e1a23)"
   ];
 
-  // --- نظام التخزين الجديد (IndexedDB عبر localForage) ---
-  const store = {
-    async get(k, fallback){ 
-      try { const v = await localforage.getItem(k); return v !== null ? v : fallback; } 
-      catch(e){ return fallback; } 
+  const PROVIDERS = {
+    mistral: {
+      label: 'Mistral AI',
+      models: [
+        { id: 'mistral-small-latest', label: 'Mistral Small — موصى به، يدعم التفكير' },
+        { id: 'mistral-medium-latest', label: 'Mistral Medium — أقوى قليلاً' },
+        { id: 'magistral-small-latest', label: 'Magistral Small — تفكير خاص (قد لا يعمل)' }
+      ],
+      help: 'مجاني بدون بطاقة بنكية. المفتاح من console.mistral.ai'
     },
-    async set(k, v){ await localforage.setItem(k, v); },
-    async remove(k){ await localforage.removeItem(k); }
+    gemini: {
+      label: 'Google Gemini',
+      models: [
+        { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash — مجاني' },
+        { id: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite — حصة أكبر' },
+        { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash — احتياطي' }
+      ],
+      help: 'نموذج Pro غير متاح مجاناً. استخدم Flash فقط.'
+    }
+  };
+
+  const store = {
+    get(k, fallback){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; } },
+    set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
   };
 
   let state = {
-    apiKey: '', model: 'gemini-2.5-flash', historyLimit: 20,
-    persona: {name:'', about:''}, characters: [], activeId: null, editingId: null
+    provider: store.get('rifqa_provider', 'mistral'),
+    apiKey: store.get('rifqa_api_key', ''),
+    model: store.get('rifqa_model', 'mistral-small-latest'),
+    historyLimit: store.get('rifqa_history_limit', 20),
+    persona: store.get('rifqa_persona', ''),
+    characters: store.get('rifqa_characters', []),
+    activeId: null,
+    editingId: null,
   };
 
-  // --- ترحيل البيانات من localStorage إلى IndexedDB (يحدث مرة واحدة فقط) ---
-  async function migrateData() {
-    const migrated = await store.get('rifqa_migrated', false);
-    if (!migrated) {
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('rifqa_')) {
-          try {
-            const val = JSON.parse(localStorage.getItem(key));
-            await store.set(key, val);
-          } catch(e) {}
-        }
-      }
-      await store.set('rifqa_migrated', true);
-    }
-  }
-
-  async function loadState() {
-    state.apiKey = await store.get('rifqa_api_key', '');
-    state.model = await store.get('rifqa_model', 'gemini-2.5-flash');
-    state.historyLimit = await store.get('rifqa_history_limit', 20);
-    state.persona = await store.get('rifqa_persona', {name:'', about:''});
-    state.characters = await store.get('rifqa_characters', []);
-  }
-
-  async function saveCharacters(){ await store.set('rifqa_characters', state.characters); }
+  function saveCharacters(){ store.set('rifqa_characters', state.characters); }
   function getChatKey(id){ return 'rifqa_chat_' + id; }
-  async function getChat(id){ return await store.get(getChatKey(id), []); }
-  async function setChat(id, msgs){ await store.set(getChatKey(id), msgs); }
+  function getChat(id){ return store.get(getChatKey(id), []); }
+  function setChat(id, msgs){ store.set(getChatKey(id), msgs); }
   function activeChar(){ return state.characters.find(c => c.id === state.activeId) || null; }
   function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
@@ -651,74 +661,7 @@
     return d.toLocaleDateString('ar-EG', { year:'numeric', month:'short', day:'numeric' });
   }
 
-  // --- التمرير الذكي ---
-  function scrollToBottom(force = false) {
-    const box = document.getElementById('messages');
-    // إذا كان المستخدم قريباً من الأسفل (بفارق 150 بكسل) أو طلبنا التمرير الإجباري، ننزل للأسفل
-    const isNearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 150;
-    if (force || isNearBottom) {
-      box.scrollTop = box.scrollHeight;
-    }
-  }
-
-  // --- نظام التصدير والاستيراد ---
-  async function exportData() {
-    const allData = { characters: state.characters, chats: {} };
-    for (const c of state.characters) {
-      allData.chats[c.id] = await getChat(c.id);
-    }
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
-    const a = document.createElement('a');
-    a.href = dataStr; a.download = "rifqa_backup_" + Date.now() + ".json";
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (imported.characters && imported.chats) {
-          state.characters = imported.characters;
-          await saveCharacters();
-          for (const [id, msgs] of Object.entries(imported.chats)) {
-            await setChat(id, msgs);
-          }
-          alert("تم استيراد البيانات بنجاح!");
-          await renderGallery();
-          closeSettings();
-        } else { alert("ملف النسخة الاحتياطية غير صالح."); }
-      } catch (err) { alert("حدث خطأ أثناء قراءة الملف."); }
-    };
-    reader.readAsText(file);
-  }
-
-  // --- تصدير المحادثة كنص مقروء ---
-  async function exportChatAsText() {
-    const c = activeChar();
-    if(!c) return;
-    const msgs = await getChat(c.id);
-    if(msgs.length === 0) { alert("المحادثة فارغة."); return; }
-    
-    let textContent = `محادثة مع: ${c.name}\nالتاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n`;
-    textContent += "====================================\n\n";
-    
-    msgs.forEach(m => {
-      if(m.role === 'system') return;
-      const sender = m.role === 'user' ? (state.persona.name || 'أنت') : c.name;
-      textContent += `[${sender}]:\n${m.text}\n\n`;
-    });
-
-    const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(textContent);
-    const a = document.createElement('a');
-    a.href = dataStr; a.download = `Chat_${c.name}_${Date.now()}.txt`;
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  // ---------------- Gallery ----------------
-  async function renderGallery(){
+  function renderGallery(){
     const grid = document.getElementById('galleryGrid');
     grid.innerHTML = '';
 
@@ -729,8 +672,8 @@
       grid.appendChild(empty);
     }
 
-    for (const c of state.characters) {
-      const msgs = await getChat(c.id);
+    state.characters.forEach(c => {
+      const msgs = getChat(c.id);
       const card = document.createElement('div');
       card.className = 'g-card';
       card.innerHTML = `
@@ -742,7 +685,7 @@
         </div>`;
       card.addEventListener('click', () => openChat(c.id));
       grid.appendChild(card);
-    }
+    });
 
     const addCard = document.createElement('div');
     addCard.className = 'g-card add-card';
@@ -751,17 +694,29 @@
     grid.appendChild(addCard);
   }
 
-  // ---------------- Chat screen open/close ----------------
-  async function openChat(id){
+  function openChat(id){
     state.activeId = id;
     document.getElementById('app').classList.add('chat-open');
     renderChatHeader();
-    await renderMessages();
+    renderMessages();
+    ensureFirstMessage();
   }
-  async function closeChat(){
+
+  function ensureFirstMessage(){
+    const c = activeChar();
+    if(!c) return;
+    if(!c.firstMessage || !c.firstMessage.trim()) return;
+    const msgs = getChat(c.id);
+    if(msgs.length !== 0) return;
+    const charMsg = { role:'char', text: c.firstMessage.trim() };
+    setChat(c.id, [charMsg]);
+    renderMessages();
+  }
+
+  function closeChat(){
     document.getElementById('app').classList.remove('chat-open');
     state.activeId = null;
-    await renderGallery();
+    renderGallery();
   }
 
   function renderChatHeader(){
@@ -774,95 +729,136 @@
     document.getElementById('hMood').textContent = c.mood ? c.mood : 'اضغط لعرض الملف';
   }
 
-  // ---------------- Messages ----------------
-  function md(t){
-    if(typeof marked === 'undefined') return escapeHtml(t);
-    const h = marked.parse(t || '', { breaks:true });
-    return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(h) : h;
-  }
-
-  async function seedGreeting(c){
-    const msgs = await getChat(c.id);
-    if(msgs.length === 0 && c.greeting){ 
-      await setChat(c.id, [{ role:'char', text:c.greeting }]); 
-    }
-  }
-
-  async function renderMessages(){
+  function renderMessages(){
     const box = document.getElementById('messages');
     const c = activeChar();
     box.innerHTML = '';
     if(!c) return;
-    await seedGreeting(c);
-    const msgs = await getChat(c.id);
+    const msgs = getChat(c.id);
     if(msgs.length === 0){
       box.innerHTML = `<div class="chat-empty"><div class="big">ابدأ الحديث مع ${escapeHtml(c.name)}</div><div>اكتب أول رسالة بالأسفل</div></div>`;
       return;
     }
-    msgs.forEach((m, i) => box.appendChild(buildBubble(m, i, i === msgs.length - 1)));
-    scrollToBottom(true);
+    const lastCharIdx = findLastCharIndex(msgs);
+    msgs.forEach((m, i) => box.appendChild(buildBubble(m, i, lastCharIdx)));
+    box.scrollTop = box.scrollHeight;
   }
 
-  function buildBubble(m, i, isLast){
+  function findLastCharIndex(msgs){
+    for(let i = msgs.length - 1; i >= 0; i--){
+      if(msgs[i].role === 'char') return i;
+    }
+    return -1;
+  }
+
+  function buildBubble(m, idx, lastCharIdx){
     const row = document.createElement('div');
     row.className = 'msg-row ' + m.role;
-    row.dataset.idx = i;
     const wrap = document.createElement('div');
-    wrap.className = 'msg-wrap';
+    wrap.className = 'bubble-wrap';
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.innerHTML = md(m.text);
+    bubble.textContent = m.text;
     wrap.appendChild(bubble);
-    if(m.role !== 'system'){
-      const acts = [['copy','📋','نسخ'], ['edit','✎','تعديل'], ['del','🗑','حذف']];
-      if(isLast && !(i === 0 && m.role === 'char')) acts.push(['regen','🔄','إعادة توليد']);
-      if(isLast && m.role === 'char') acts.push(['cont','▶','متابعة']);
-      const bar = document.createElement('div');
-      bar.className = 'msg-acts';
-      acts.forEach(([k, ic, t]) => { const bt = document.createElement('button'); bt.dataset.act = k; bt.title = t; bt.textContent = ic; bar.appendChild(bt); });
-      wrap.appendChild(bar);
+
+    if(m.role === 'user' || m.role === 'char'){
+      const actions = document.createElement('div');
+      actions.className = 'msg-actions';
+
+      if(m.role === 'char' && idx === lastCharIdx){
+        const regenBtn = document.createElement('button');
+        regenBtn.className = 'msg-action-btn';
+        regenBtn.textContent = '↻ إعادة';
+        regenBtn.title = 'توليد رد جديد بدل هذا';
+        regenBtn.addEventListener('click', regenerateLast);
+        actions.appendChild(regenBtn);
+      }
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'msg-action-btn danger';
+      delBtn.textContent = 'حذف';
+      delBtn.addEventListener('click', () => deleteMessage(idx));
+      actions.appendChild(delBtn);
+
+      wrap.appendChild(actions);
     }
     row.appendChild(wrap);
     return row;
   }
 
-  function appendSystem(text){
+  function appendMessageToUI(m, streamed){
     const box = document.getElementById('messages');
-    const row = document.createElement('div');
-    row.className = 'msg-row system';
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    bubble.textContent = text;
-    row.appendChild(bubble);
+    const empty = box.querySelector('.chat-empty');
+    if(empty) empty.remove();
+    const msgs = getChat(state.activeId);
+    const idx = msgs.length - 1;
+    const lastCharIdx = findLastCharIndex(msgs);
+    const row = buildBubble(m, idx, lastCharIdx);
     box.appendChild(row);
-    scrollToBottom(true);
+    box.scrollTop = box.scrollHeight;
+
+    if(streamed && m.role === 'char'){
+      const bubble = row.querySelector('.bubble');
+      const text = m.text;
+      let i = 0;
+      const step = Math.max(1, Math.floor(text.length / 60));
+      bubble.textContent = '';
+      const iv = setInterval(() => {
+        i += step;
+        bubble.textContent = text.slice(0, i);
+        box.scrollTop = box.scrollHeight;
+        if(i >= text.length){ clearInterval(iv); bubble.textContent = text; }
+      }, 12);
+    }
   }
 
-  async function onMsgAction(e){
-    const b = e.target.closest('[data-act]');
+  async function regenerateLast(){
     const c = activeChar();
-    if(!b || !c) return;
-    const idx = parseInt(b.closest('.msg-row').dataset.idx, 10);
-    const act = b.dataset.act;
-    const msgs = await getChat(c.id);
-    
-    if(act === 'copy'){
-      navigator.clipboard.writeText(msgs[idx].text).then(() => {
-        const old = b.textContent; b.textContent = '✔'; setTimeout(() => b.textContent = old, 1000);
-      });
-    }else if(act === 'del'){
-      if(!confirm('حذف هذه الرسالة؟')) return;
-      msgs.splice(idx, 1); await setChat(c.id, msgs); await renderMessages(); await renderGallery();
-    }else if(act === 'edit'){
-      const t = prompt('تعديل الرسالة', msgs[idx].text);
-      if(t === null || !t.trim()) return;
-      msgs[idx].text = t.trim(); await setChat(c.id, msgs); await renderMessages();
-    }else if(act === 'regen' || act === 'cont'){
-      if(!state.apiKey){ openSettings(); return; }
-      if(act === 'regen' && msgs[msgs.length - 1].role === 'char'){ msgs.pop(); await setChat(c.id, msgs); }
-      await renderMessages();
-      generateReply(c, act === 'cont');
+    if(!c) return;
+    if(!state.apiKey){ openSettings(); return; }
+    let msgs = getChat(c.id);
+    const lastCharIdx = findLastCharIndex(msgs);
+    if(lastCharIdx === -1){
+      appendMessageToUI({ role:'system', text: 'لا يوجد رد لتوليده — أرسل رسالة أولاً.' }, false);
+      return;
     }
+    const beforeChar = msgs.slice(0, lastCharIdx);
+    const hasUser = beforeChar.some(m => m.role === 'user');
+    if(!hasUser){
+      appendMessageToUI({ role:'system', text: 'لا يمكن إعادة توليد الرسالة الافتتاحية. عدّلها من «تعديل الشخصية».' }, false);
+      return;
+    }
+    msgs = beforeChar;
+    setChat(c.id, msgs);
+    renderMessages();
+    setSending(true);
+    showTyping();
+    try{
+      const reply = await callAI(c, msgs);
+      hideTyping();
+      const charMsg = { role:'char', text: reply };
+      msgs.push(charMsg);
+      setChat(c.id, msgs);
+      appendMessageToUI(charMsg, c.streaming !== false);
+      renderGallery();
+    }catch(err){
+      hideTyping();
+      appendMessageToUI({ role:'system', text: 'تعذّر الحصول على رد: ' + err.message }, false);
+    }finally{
+      setSending(false);
+    }
+  }
+
+  function deleteMessage(idx){
+    const c = activeChar();
+    if(!c) return;
+    const msgs = getChat(c.id);
+    if(idx < 0 || idx >= msgs.length) return;
+    if(!confirm('حذف هذه الرسالة؟')) return;
+    msgs.splice(idx, 1);
+    setChat(c.id, msgs);
+    renderMessages();
+    renderGallery();
   }
 
   function showTyping(){
@@ -871,17 +867,27 @@
     t.className = 'typing'; t.id = 'typingIndicator';
     t.innerHTML = '<span></span><span></span><span></span>';
     box.appendChild(t);
-    scrollToBottom(true);
+    box.scrollTop = box.scrollHeight;
   }
   function hideTyping(){ const t = document.getElementById('typingIndicator'); if(t) t.remove(); }
 
-  // ---------------- Sending ----------------
   function buildSystemPrompt(c){
-    const pn = (state.persona.name || '').trim() || 'المستخدم';
-    const about = (state.persona.about || '').trim();
-    const rule2 = c.actions
-      ? `2. يمكنك إضافة وصف قصير للحركات والمشاعر بين نجمتين (مثل: *تبتسم*) بين الحوار، بأسلوب سردي طبيعي ومختصر.`
-      : `2. ممنوع منعاً باتاً إضافة أي وصف حركي أو نبرة صوت أو حالة شعورية مكتوبة بين قوسين أو نجمتين (مثل: *تبتسم*، أو "بصوت هادئ:")، إلا إذا طلب المستخدم ذلك صراحة.`;
+    const personaBlock = state.persona && state.persona.trim()
+      ? `\n\n--- عن المستخدم (Persona) ---\n${state.persona.trim()}` : '';
+    const scenarioBlock = c.scenario && c.scenario.trim()
+      ? `\n\n--- السيناريو الحالي ---\n${c.scenario.trim()}` : '';
+    const examplesBlock = c.exampleDialogue && c.exampleDialogue.trim()
+      ? `\n\n--- أمثلة على أسلوب الحوار المطلوب ---\n${c.exampleDialogue.trim()}` : '';
+    const moodBlock = c.mood && c.mood.trim()
+      ? `\n\nملاحظة سياقية: حالتك النفسية/المزاجية الآن هي: ${c.mood.trim()}. دع هذا ينعكس طبيعياً في أسلوب ردودك دون ذكره صراحة.` : '';
+
+    if(c.customPrompt && c.customPrompt.trim()){
+      let p = c.customPrompt.trim()
+        .replace(/\{\{char\}\}/g, c.name)
+        .replace(/\{\{user\}\}/g, 'المستخدم');
+      return p + personaBlock + scenarioBlock + examplesBlock + moodBlock;
+    }
+
     let p = `أنت شخصية اسمها "${c.name}" في محادثة نصية خاصة وطبيعية مع شخص تعرفه.
 
 وصف الشخصية:
@@ -889,20 +895,11 @@ ${c.personality || 'شخصية ودودة عادية.'}
 
 قواعد صارمة يجب اتباعها دائماً:
 1. اكتب فقط الكلام المنطوق، بصيغة رسائل نصية طبيعية بين شخصين، تماماً كأنك تكتب على الهاتف.
-${rule2}
+2. ممنوع منعاً باتاً إضافة أي وصف حركي أو نبرة صوت أو حالة شعورية مكتوبة بين قوسين أو نجمتين (مثل: *تبتسم*، أو "بصوت هادئ:")، إلا إذا طلب المستخدم ذلك صراحة.
 3. لا تذكر أنك ذكاء اصطناعي أو نموذج لغوي أو أنك تتبع تعليمات؛ تصرف كأنك الشخصية نفسها بالكامل.
 4. حافظ على اتساق شخصيتك وأسلوبها عبر كامل المحادثة، واجعل ردودك متسقة منطقياً مع مجرى الحديث ومزاج المستخدم كما يظهر من كلامه.
-5. اجعل الردود بطول طبيعي لمحادثة نصية حقيقية، لا مقالات طويلة إلا إذا اقتضى السياق ذلك.
-6. كن مبادراً وحاضر الذهن: تفاعل مع تفاصيل كلام ${pn}، وأضف ردود فعل وتفاصيل وأسئلة تُبقي الحديث حياً، ولا تتحدث أو تتصرف نيابةً عن ${pn}.`;
-    if(pn !== 'المستخدم' || about) p += `\n\nعن محدّثك: الاسم: ${pn}. ${about}`;
-    if(c.scenario) p += `\n\nالسيناريو / الموقف الحالي:\n${c.scenario}`;
-    if(c.examples) p += `\n\nأمثلة على أسلوبك في الكلام (قلّد النبرة والمفردات لا الجمل نفسها):\n${c.examples}`;
-    if(c.pinned) p += `\n\nحقائق ثابتة يجب أن تتذكرها دائماً:\n${c.pinned}`;
-    if(c.summary) p += `\n\nملخص ما جرى سابقاً في المحادثة (ذاكرتك الطويلة):\n${c.summary}`;
-    if(c.mood && c.mood.trim()){
-      p += `\n\nملاحظة سياقية: الحالة النفسية/المزاجية الحالية لـ"${c.name}" الآن هي: ${c.mood.trim()}. دع هذا ينعكس بشكل طبيعي في أسلوب ردودها دون ذكره صراحة.`;
-    }
-    return p;
+5. اجعل الردود بطول طبيعي لمحادثة نصية حقيقية، لا مقالات طويلة إلا إذا اقتضى السياق ذلك.`;
+    return p + personaBlock + scenarioBlock + examplesBlock + moodBlock;
   }
 
   async function sendMessage(){
@@ -912,121 +909,121 @@ ${rule2}
     const text = input.value.trim();
     if(!text) return;
     if(!state.apiKey){ openSettings(); return; }
-    const msgs = await getChat(c.id);
-    msgs.push({ role:'user', text });
-    await setChat(c.id, msgs);
-    input.value = ''; autoResize(input);
-    await renderMessages();
-    await generateReply(c, false);
-  }
 
-  async function generateReply(c, cont){
-    const box = document.getElementById('messages');
+    let msgs = getChat(c.id);
+    const userMsg = { role:'user', text };
+    msgs.push(userMsg);
+    setChat(c.id, msgs);
+    appendMessageToUI(userMsg, false);
+    input.value = ''; autoResize(input);
     setSending(true);
     showTyping();
-    let bubble = null, err = null;
-    const live = c.streaming !== false ? (full) => {
-      if(!bubble){
-        hideTyping();
-        const row = document.createElement('div'); row.className = 'msg-row char';
-        const wrap = document.createElement('div'); wrap.className = 'msg-wrap';
-        bubble = document.createElement('div'); bubble.className = 'bubble';
-        wrap.appendChild(bubble); row.appendChild(wrap); box.appendChild(row);
-      }
-      bubble.innerHTML = md(full);
-      scrollToBottom(false); // تمرير ذكي
-    } : null;
+
     try{
-      const msgs = await getChat(c.id);
-      const reply = await callGemini(c, msgs, live, cont);
-      if(cont){ const last = msgs[msgs.length - 1]; last.text = last.text.trimEnd() + ' ' + reply; }
-      else msgs.push({ role:'char', text: reply });
-      await setChat(c.id, msgs);
-    }catch(e){ err = e.message; }
-    hideTyping();
-    setSending(false);
-    await renderMessages();
-    await renderGallery();
-    if(err) appendSystem('تعذّر الحصول على رد: ' + err);
-    else maybeSummarize(c, await getChat(c.id)).catch(() => {});
+      const reply = await callAI(c, msgs);
+      hideTyping();
+      const charMsg = { role:'char', text: reply };
+      msgs.push(charMsg);
+      setChat(c.id, msgs);
+      appendMessageToUI(charMsg, c.streaming !== false);
+      renderGallery();
+    }catch(err){
+      hideTyping();
+      appendMessageToUI({ role:'system', text: 'تعذّر الحصول على رد: ' + err.message }, false);
+    }finally{
+      setSending(false);
+    }
   }
 
-  function thinkingCfg(){
-    if(!state.model.includes('2.5')) return {};
-    return { thinkingConfig: { thinkingBudget: state.model.includes('pro') ? 128 : 256 } };
+  async function callAI(c, msgs){
+    if(state.provider === 'mistral') return callMistral(c, msgs);
+    return callGemini(c, msgs);
   }
 
-  async function geminiFetch(method, body, sse){
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:${method}?${sse ? 'alt=sse&' : ''}key=${encodeURIComponent(state.apiKey)}`;
+  async function callMistral(c, msgs){
+    const limit = state.historyLimit;
+    const trimmed = msgs.slice(Math.max(0, msgs.length - limit)).filter(m => m.role !== 'system');
+
+    const messages = [
+      { role: 'system', content: buildSystemPrompt(c) },
+      ...trimmed.map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }))
+    ];
+
+    const body = {
+      model: state.model,
+      messages,
+      temperature: c.temperature ?? 1.0,
+      top_p: c.topP ?? 0.95,
+      max_tokens: 1024
+    };
+
+    const reason = c.reasoning || 'high';
+    if(reason !== 'none'){
+      body.reasoning_effort = reason;
+    }
+
+    const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + state.apiKey
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      let detail = '';
+      try{ const j = await res.json(); detail = j.error?.message || j.message || ''; }catch(e){}
+      throw new Error(`${res.status} ${detail || res.statusText}`);
+    }
+
+    const data = await res.json();
+    const msg = data.choices && data.choices[0] && data.choices[0].message;
+    if(!msg) throw new Error('لم يصل رد صالح من Mistral.');
+
+    let content = msg.content;
+    if(Array.isArray(content)){
+      content = content
+        .filter(chunk => chunk && (chunk.type === 'text' || chunk.text))
+        .map(chunk => chunk.text || '')
+        .join('');
+    }
+    if(typeof content !== 'string' || !content.trim()){
+      throw new Error('رد فارغ من Mistral (قد يكون المحتوى مفلتراً).');
+    }
+    return content.trim();
+  }
+
+  async function callGemini(c, msgs){
+    const limit = state.historyLimit;
+    const trimmed = msgs.slice(Math.max(0, msgs.length - limit)).filter(m => m.role !== 'system');
+    const contents = trimmed.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+    const body = {
+      contents,
+      systemInstruction: { parts: [{ text: buildSystemPrompt(c) }] },
+      generationConfig: {
+        temperature: c.temperature ?? 1.0,
+        topP: c.topP ?? 0.95,
+        maxOutputTokens: 1024
+      }
+    };
     const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
     if(!res.ok){
       let detail = '';
       try{ const j = await res.json(); detail = j.error?.message || ''; }catch(e){}
       throw new Error(`${res.status} ${detail || res.statusText}`);
     }
-    return res;
-  }
-
-  async function callGemini(c, msgs, onChunk, cont){
-    const limit = state.historyLimit;
-    const trimmed = msgs.slice(Math.max(0, msgs.length - limit)).filter(m => m.role !== 'system');
-    const contents = trimmed.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
-    if(contents.length && contents[0].role === 'model') contents.unshift({ role:'user', parts:[{ text:'(بدأت المحادثة)' }] });
-    if(cont) contents.push({ role:'user', parts:[{ text:'[أكمل رسالتك السابقة من حيث توقفت تماماً دون تكرار ما قلته]' }] });
-    const body = {
-      contents,
-      systemInstruction: { parts: [{ text: buildSystemPrompt(c) }] },
-      generationConfig: { temperature: c.temperature ?? 1.0, topP: c.topP ?? 0.95, maxOutputTokens: 4096, ...thinkingCfg() }
-    };
-    const res = await geminiFetch('streamGenerateContent', body, true);
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '', full = '', finish = '';
-    while(true){
-      const { value, done } = await reader.read();
-      if(done) break;
-      buf += dec.decode(value, { stream:true });
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for(const ln of lines){
-        if(!ln.startsWith('data:')) continue;
-        try{
-          const j = JSON.parse(ln.slice(5).trim());
-          const cand = j.candidates && j.candidates[0];
-          if(cand && cand.finishReason) finish = cand.finishReason;
-          const t = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('') : '';
-          if(t){ full += t; if(onChunk) onChunk(full); }
-        }catch(e){}
-      }
+    const data = await res.json();
+    const cand = data.candidates && data.candidates[0];
+    if(!cand || !cand.content || !cand.content.parts){
+      throw new Error('لم يصل رد صالح من النموذج.');
     }
-    full = full.trim();
-    if(!full) throw new Error('لم يصل رد صالح من النموذج' + (finish ? ' (' + finish + ')' : '') + '. قد يكون بسبب فلترة المحتوى.');
-    return full;
-  }
-
-  // ---------------- Long-term memory ----------------
-  let summarizing = false;
-  async function maybeSummarize(c, msgs){
-    const limit = state.historyLimit;
-    if(limit >= 9999 || summarizing) return;
-    const cutoff = msgs.length - limit;
-    const from = c.summarizedUpTo || 0;
-    if(cutoff - from < 10) return;
-    summarizing = true;
-    try{
-      const pn = (state.persona.name || '').trim() || 'المستخدم';
-      const txt = msgs.slice(from, cutoff).filter(m => m.role !== 'system')
-        .map(m => (m.role === 'user' ? pn : c.name) + ': ' + m.text).join('\n');
-      const prompt = `أنت تدير ذاكرة محادثة بين ${pn} و${c.name}. لديك الملخص الحالي وأحداث جديدة. حدّث الملخص ليحتفظ بأهم الأحداث والحقائق والمشاعر والوعود والتفاصيل المهمة عن ${pn} وعن علاقتهما، في نقاط قصيرة لا تتجاوز 250 كلمة. اكتب الملخص فقط دون مقدمات.\n\nالملخص الحالي:\n${c.summary || '(لا يوجد)'}\n\nأحداث جديدة:\n${txt}`;
-      const res = await geminiFetch('generateContent', {
-        contents: [{ role:'user', parts:[{ text: prompt }] }],
-        generationConfig: { temperature: 0.3, maxOutputTokens: 1024, ...thinkingCfg() }
-      }, false);
-      const data = await res.json();
-      const cand = data.candidates && data.candidates[0];
-      const out = cand && cand.content && cand.content.parts ? cand.content.parts.map(p => p.text || '').join('').trim() : '';
-      if(out){ c.summary = out; c.summarizedUpTo = cutoff; await saveCharacters(); }
-    } finally { summarizing = false; }
+    return cand.content.parts.map(p => p.text || '').join('').trim() || '…';
   }
 
   function setSending(on){
@@ -1035,7 +1032,6 @@ ${rule2}
   }
   function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,130)+'px'; }
 
-  // ---------------- Character create/edit ----------------
   let selectedAvatar = AVATARS[0];
   let selectedGradient = GRADIENTS[0];
 
@@ -1065,10 +1061,11 @@ ${rule2}
       const c = state.characters.find(x => x.id === editId);
       title.textContent = 'تعديل الشخصية';
       document.getElementById('fName').value = c.name;
-      document.getElementById('fPersonality').value = c.personality;
+      document.getElementById('fPersonality').value = c.personality || '';
       document.getElementById('fScenario').value = c.scenario || '';
-      document.getElementById('fGreeting').value = c.greeting || '';
-      document.getElementById('fExamples').value = c.examples || '';
+      document.getElementById('fFirstMessage').value = c.firstMessage || '';
+      document.getElementById('fExamples').value = c.exampleDialogue || '';
+      document.getElementById('fCustomPrompt').value = c.customPrompt || '';
       selectedAvatar = c.avatar; selectedGradient = c.gradient;
       delRow.style.display = 'block';
     }else{
@@ -1076,72 +1073,84 @@ ${rule2}
       document.getElementById('fName').value = '';
       document.getElementById('fPersonality').value = '';
       document.getElementById('fScenario').value = '';
-      document.getElementById('fGreeting').value = '';
+      document.getElementById('fFirstMessage').value = '';
       document.getElementById('fExamples').value = '';
+      document.getElementById('fCustomPrompt').value = '';
       const idx = Math.floor(Math.random()*AVATARS.length);
       selectedAvatar = AVATARS[idx]; selectedGradient = GRADIENTS[idx % GRADIENTS.length];
       delRow.style.display = 'none';
     }
+    switchCharTab('basic');
     buildAvatarPicker();
     document.getElementById('charOverlay').classList.add('show');
   }
+
+  function switchCharTab(name){
+    document.querySelectorAll('#charOverlay .modal-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === name);
+    });
+    document.querySelectorAll('#charOverlay .tab-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.panel === name);
+    });
+  }
+
   function closeCharModal(){ document.getElementById('charOverlay').classList.remove('show'); }
 
-  async function saveCharFromModal(){
+  function saveCharFromModal(){
     const name = document.getElementById('fName').value.trim();
     const personality = document.getElementById('fPersonality').value.trim();
+    const scenario = document.getElementById('fScenario').value.trim();
+    const firstMessage = document.getElementById('fFirstMessage').value.trim();
+    const exampleDialogue = document.getElementById('fExamples').value.trim();
+    const customPrompt = document.getElementById('fCustomPrompt').value.trim();
     if(!name){ alert('الرجاء إدخال اسم للشخصية'); return; }
 
     if(state.editingId){
       const c = state.characters.find(x => x.id === state.editingId);
-      c.name = name; c.personality = personality; c.avatar = selectedAvatar; c.gradient = selectedGradient;
-      c.scenario = document.getElementById('fScenario').value.trim();
-      c.greeting = document.getElementById('fGreeting').value.trim();
-      c.examples = document.getElementById('fExamples').value.trim();
+      c.name = name; c.personality = personality;
+      c.avatar = selectedAvatar; c.gradient = selectedGradient;
+      c.scenario = scenario; c.firstMessage = firstMessage;
+      c.exampleDialogue = exampleDialogue; c.customPrompt = customPrompt;
     }else{
       const c = {
-        id: 'c_' + Date.now(), name, personality, avatar: selectedAvatar, gradient: selectedGradient,
-        mood:'', temperature:1.0, topP:0.95, streaming:true, createdAt: Date.now(),
-        scenario: document.getElementById('fScenario').value.trim(),
-        greeting: document.getElementById('fGreeting').value.trim(),
-        examples: document.getElementById('fExamples').value.trim(),
-        pinned:'', actions:false, summary:'', summarizedUpTo:0
+        id: 'c_' + Date.now(), name, personality,
+        avatar: selectedAvatar, gradient: selectedGradient,
+        scenario, firstMessage, exampleDialogue, customPrompt,
+        mood:'', temperature:1.0, topP:0.95, reasoning:'high',
+        streaming:true, createdAt: Date.now()
       };
       state.characters.push(c);
     }
-    await saveCharacters();
+    saveCharacters();
     closeCharModal();
-    await renderGallery();
+    renderGallery();
     if(state.activeId){ renderChatHeader(); }
   }
 
-  async function deleteChar(){
+  function deleteChar(){
     if(!state.editingId) return;
     if(!confirm('حذف هذه الشخصية وكل محادثتها نهائياً؟')) return;
-    await store.remove(getChatKey(state.editingId));
+    localStorage.removeItem(getChatKey(state.editingId));
     state.characters = state.characters.filter(c => c.id !== state.editingId);
-    await saveCharacters();
+    saveCharacters();
     closeCharModal();
-    if(state.activeId === state.editingId){ await closeChat(); }
-    else{ await renderGallery(); }
+    if(state.activeId === state.editingId){ closeChat(); }
+    else{ renderGallery(); }
   }
 
-  // ---------------- Profile sheet ----------------
-  async function openProfile(){
+  function openProfile(){
     const c = activeChar();
     if(!c) return;
     const av = document.getElementById('pAvatar');
     av.textContent = c.avatar; av.style.background = c.gradient;
     document.getElementById('pName').textContent = c.name;
-    const msgs = await getChat(c.id);
-    document.getElementById('pMsgCount').textContent = msgs.length;
+    document.getElementById('pMsgCount').textContent = getChat(c.id).length;
     document.getElementById('pCreated').textContent = fmtDate(c.createdAt);
     document.getElementById('pBio').textContent = c.personality || 'بدون وصف بعد.';
     document.getElementById('profileOverlay').classList.add('show');
   }
   function closeProfile(){ document.getElementById('profileOverlay').classList.remove('show'); }
 
-  // ---------------- Chat settings sheet ----------------
   function openChatSettings(){
     const c = activeChar();
     if(!c) return;
@@ -1150,80 +1159,93 @@ ${rule2}
     document.getElementById('csTempVal').textContent = (c.temperature ?? 1.0).toFixed(1);
     document.getElementById('csTopP').value = c.topP ?? 0.95;
     document.getElementById('csTopPVal').textContent = (c.topP ?? 0.95).toFixed(2);
+    document.getElementById('csReason').value = c.reasoning || 'high';
+    document.getElementById('csReasonVal').textContent = c.reasoning || 'high';
     document.getElementById('csStreaming').checked = c.streaming !== false;
-    document.getElementById('csActions').checked = !!c.actions;
-    document.getElementById('csPinned').value = c.pinned || '';
     document.getElementById('chatSettingsOverlay').classList.add('show');
   }
   function closeChatSettings(){ document.getElementById('chatSettingsOverlay').classList.remove('show'); }
-  async function saveChatSettings(){
+  function saveChatSettings(){
     const c = activeChar();
     if(!c) return;
     c.mood = document.getElementById('csMood').value.trim();
     c.temperature = parseFloat(document.getElementById('csTemp').value);
     c.topP = parseFloat(document.getElementById('csTopP').value);
+    c.reasoning = document.getElementById('csReason').value;
     c.streaming = document.getElementById('csStreaming').checked;
-    c.actions = document.getElementById('csActions').checked;
-    c.pinned = document.getElementById('csPinned').value.trim();
-    await saveCharacters();
+    saveCharacters();
     closeChatSettings();
     renderChatHeader();
-    await renderGallery();
+    renderGallery();
   }
 
-  // ---------------- Global settings ----------------
+  function renderModelsForProvider(){
+    const sel = document.getElementById('modelSelect');
+    const info = PROVIDERS[state.provider];
+    sel.innerHTML = '';
+    info.models.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.label;
+      sel.appendChild(opt);
+    });
+    document.getElementById('modelHelp').textContent = info.help;
+    if(!info.models.some(m => m.id === state.model)){
+      state.model = info.models[0].id;
+    }
+    sel.value = state.model;
+    const helpEl = document.getElementById('apiKeyHelp');
+    if(state.provider === 'mistral'){
+      helpEl.innerHTML = 'يُحفظ فقط في متصفحك. مفتاح Mistral: <a href="https://console.mistral.ai/api-keys" target="_blank" style="color:var(--accent);">console.mistral.ai</a>';
+    }else{
+      helpEl.innerHTML = 'يُحفظ فقط في متصفحك. مفتاح Gemini: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent);">aistudio.google.com</a>';
+    }
+  }
+
   function openSettings(){
+    document.getElementById('providerSelect').value = state.provider;
     document.getElementById('apiKeyInput').value = state.apiKey;
-    document.getElementById('modelSelect').value = state.model;
+    document.getElementById('personaInput').value = state.persona || '';
     document.getElementById('historySelect').value = String(state.historyLimit);
-    document.getElementById('perName').value = state.persona.name || '';
-    document.getElementById('perAbout').value = state.persona.about || '';
+    renderModelsForProvider();
     document.getElementById('settingsOverlay').classList.add('show');
   }
   function closeSettings(){ document.getElementById('settingsOverlay').classList.remove('show'); }
-  async function saveSettings(){
+  function saveSettings(){
+    state.provider = document.getElementById('providerSelect').value;
     state.apiKey = document.getElementById('apiKeyInput').value.trim();
     state.model = document.getElementById('modelSelect').value;
+    state.persona = document.getElementById('personaInput').value.trim();
     state.historyLimit = parseInt(document.getElementById('historySelect').value, 10);
-    await store.set('rifqa_api_key', state.apiKey);
-    await store.set('rifqa_model', state.model);
-    await store.set('rifqa_history_limit', state.historyLimit);
-    state.persona = { name: document.getElementById('perName').value.trim(), about: document.getElementById('perAbout').value.trim() };
-    await store.set('rifqa_persona', state.persona);
+    store.set('rifqa_provider', state.provider);
+    store.set('rifqa_api_key', state.apiKey);
+    store.set('rifqa_model', state.model);
+    store.set('rifqa_persona', state.persona);
+    store.set('rifqa_history_limit', state.historyLimit);
     closeSettings();
   }
 
-  async function clearChat(){
-    const c = activeChar();
-    if(!c) return;
-    if(!confirm(`مسح محادثتك مع ${c.name}؟ لا يمكن التراجع.`)) return;
-    await setChat(c.id, []);
-    await renderMessages();
-    await renderGallery();
-  }
-
-  // ---------------- Init ----------------
-  async function init(){
-    // 1. ترحيل البيانات القديمة إن وجدت
-    await migrateData();
-    // 2. تحميل الحالة من IndexedDB
-    await loadState();
-    // 3. عرض الواجهة
-    await renderGallery();
+  function init(){
+    renderGallery();
 
     document.getElementById('settingsBtn').addEventListener('click', openSettings);
     document.getElementById('settingsCancelBtn').addEventListener('click', closeSettings);
     document.getElementById('settingsSaveBtn').addEventListener('click', saveSettings);
     document.getElementById('settingsOverlay').addEventListener('click', e => { if(e.target.id==='settingsOverlay') closeSettings(); });
-
-    document.getElementById('exportBtn').addEventListener('click', exportData);
-    document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
-    document.getElementById('importFile').addEventListener('change', importData);
+    document.getElementById('providerSelect').addEventListener('change', e => {
+      state.provider = e.target.value;
+      renderModelsForProvider();
+    });
+    document.getElementById('modelSelect').addEventListener('change', e => { state.model = e.target.value; });
 
     document.getElementById('backBtn').addEventListener('click', closeChat);
     document.getElementById('hInfoBtn').addEventListener('click', openProfile);
     document.getElementById('chatSettingsBtn').addEventListener('click', openChatSettings);
-    document.getElementById('exportChatBtn').addEventListener('click', exportChatAsText);
+    document.getElementById('regenBtn').addEventListener('click', regenerateLast);
+
+       document.querySelectorAll('#charOverlay .modal-tab').forEach(t => {
+      t.addEventListener('click', () => switchCharTab(t.dataset.tab));
+    });
 
     document.getElementById('charCancelBtn').addEventListener('click', closeCharModal);
     document.getElementById('charSaveBtn').addEventListener('click', saveCharFromModal);
@@ -1239,18 +1261,16 @@ ${rule2}
     document.getElementById('chatSettingsOverlay').addEventListener('click', e => { if(e.target.id==='chatSettingsOverlay') closeChatSettings(); });
     document.getElementById('csTemp').addEventListener('input', e => document.getElementById('csTempVal').textContent = parseFloat(e.target.value).toFixed(1));
     document.getElementById('csTopP').addEventListener('input', e => document.getElementById('csTopPVal').textContent = parseFloat(e.target.value).toFixed(2));
+    document.getElementById('csReason').addEventListener('change', e => document.getElementById('csReasonVal').textContent = e.target.value);
 
     const msgInput = document.getElementById('msgInput');
     msgInput.addEventListener('input', () => autoResize(msgInput));
     msgInput.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
     document.getElementById('sendBtn').addEventListener('click', sendMessage);
-    document.getElementById('clearBtn').addEventListener('click', clearChat);
-    document.getElementById('messages').addEventListener('click', onMsgAction);
 
     if(!state.apiKey){ setTimeout(openSettings, 300); }
   }
 
-  // تشغيل التطبيق
   init();
 })();
 </script>
