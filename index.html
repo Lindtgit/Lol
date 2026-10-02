@@ -474,6 +474,7 @@
     </div>
   </div>
 </div>
+
 <div class="overlay" id="profileOverlay">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -525,7 +526,7 @@
         <option value="medium">تفكير متوسط</option>
         <option value="high" selected>تفكير عميق (الأفضل للعب الأدوار)</option>
       </select>
-      <small>يُطبَّق على نماذج Mistral فقط التي تدعم التفكير. يستهلك توكنات أكثر.</small>
+      <small>يُطبَّق على نماذج Qwen3 في Groq و Mistral. يستهلك توكنات أكثر.</small>
     </div>
 
     <div class="toggle-row">
@@ -554,7 +555,7 @@
     <div class="field">
       <label>المزوّد (Provider)</label>
       <select id="providerSelect">
-        <option value="mistral">Mistral AI (موصى به — مجاني)</option>
+        <option value="groq">Groq (سريع ومجاني)</option>
         <option value="gemini">Google Gemini</option>
       </select>
       <small>عند تغيير المزود، بدّل المفتاح والنموذج المناسبين.</small>
@@ -568,8 +569,8 @@
 
     <div class="field">
       <label>مفتاح API</label>
-      <input type="password" id="apiKeyInput" placeholder="sk-... أو AIza...">
-      <small id="apiKeyHelp">يُحفظ فقط في متصفحك. للحصول على مفتاح Mistral: <a href="https://console.mistral.ai/api-keys" target="_blank" style="color:var(--accent);">console.mistral.ai</a></small>
+      <input type="password" id="apiKeyInput" placeholder="gsk_... أو AIza...">
+      <small id="apiKeyHelp"></small>
     </div>
 
     <div class="field">
@@ -612,14 +613,14 @@
   ];
 
   const PROVIDERS = {
-    mistral: {
-      label: 'Mistral AI',
+    groq: {
+      label: 'Groq',
       models: [
-        { id: 'mistral-small-latest', label: 'Mistral Small — موصى به، يدعم التفكير' },
-        { id: 'mistral-medium-latest', label: 'Mistral Medium — أقوى قليلاً' },
-        { id: 'magistral-small-latest', label: 'Magistral Small — تفكير خاص (قد لا يعمل)' }
+        { id: 'qwen/qwen3.6-27b', label: 'Qwen 3.6 27B — تفكير عميق (موصى به)' },
+        { id: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B — سريع وذكي' },
+        { id: 'deepseek-r1-distill-qwen-32b', label: 'DeepSeek R1 32B — تفكير قوي' }
       ],
-      help: 'مجاني بدون بطاقة بنكية. المفتاح من console.mistral.ai'
+      help: 'مجاني بدون بطاقة بنكية. المفتاح من console.groq.com'
     },
     gemini: {
       label: 'Google Gemini',
@@ -628,7 +629,7 @@
         { id: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite — حصة أكبر' },
         { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash — احتياطي' }
       ],
-      help: 'نموذج Pro غير متاح مجاناً. استخدم Flash فقط.'
+      help: 'استخدم Flash فقط. Pro غير متاح مجاناً.'
     }
   };
 
@@ -638,9 +639,9 @@
   };
 
   let state = {
-    provider: store.get('rifqa_provider', 'mistral'),
+    provider: store.get('rifqa_provider', 'groq'),
     apiKey: store.get('rifqa_api_key', ''),
-    model: store.get('rifqa_model', 'mistral-small-latest'),
+    model: store.get('rifqa_model', 'qwen/qwen3.6-27b'),
     historyLimit: store.get('rifqa_history_limit', 20),
     persona: store.get('rifqa_persona', ''),
     characters: store.get('rifqa_characters', []),
@@ -668,7 +669,7 @@
     if(state.characters.length === 0){
       const empty = document.createElement('div');
       empty.className = 'gallery-empty';
-      empty.innerHTML = `<div class="big">لا شخصيات بعد</div><div>أنشئ أول شخصية بملامحها الخاصة</div>`;
+      empty.innerHTML = '<div class="big">لا شخصيات بعد</div><div>أنشئ أول شخصية بملامحها الخاصة</div>';
       grid.appendChild(empty);
     }
 
@@ -689,7 +690,7 @@
 
     const addCard = document.createElement('div');
     addCard.className = 'g-card add-card';
-    addCard.innerHTML = `<div class="plus">+</div><div class="lbl">شخصية جديدة</div>`;
+    addCard.innerHTML = '<div class="plus">+</div><div class="lbl">شخصية جديدة</div>';
     addCard.addEventListener('click', () => openCharModal(null));
     grid.appendChild(addCard);
   }
@@ -936,11 +937,11 @@ ${c.personality || 'شخصية ودودة عادية.'}
   }
 
   async function callAI(c, msgs){
-    if(state.provider === 'mistral') return callMistral(c, msgs);
+    if(state.provider === 'groq') return callGroq(c, msgs);
     return callGemini(c, msgs);
   }
 
-  async function callMistral(c, msgs){
+  async function callGroq(c, msgs){
     const limit = state.historyLimit;
     const trimmed = msgs.slice(Math.max(0, msgs.length - limit)).filter(m => m.role !== 'system');
 
@@ -960,12 +961,13 @@ ${c.personality || 'شخصية ودودة عادية.'}
       max_tokens: 1024
     };
 
-    const reason = c.reasoning || 'high';
-    if(reason !== 'none'){
-      body.reasoning_effort = reason;
+    if(state.model.includes('qwen3')){
+      const reason = c.reasoning || 'high';
+      body.reasoning_effort = reason === 'none' ? 'none' : 'default';
+      body.reasoning_format = 'hidden';
     }
 
-    const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -976,25 +978,16 @@ ${c.personality || 'شخصية ودودة عادية.'}
 
     if(!res.ok){
       let detail = '';
-      try{ const j = await res.json(); detail = j.error?.message || j.message || ''; }catch(e){}
+      try{ const j = await res.json(); detail = j.error?.message || ''; }catch(e){}
       throw new Error(`${res.status} ${detail || res.statusText}`);
     }
 
     const data = await res.json();
     const msg = data.choices && data.choices[0] && data.choices[0].message;
-    if(!msg) throw new Error('لم يصل رد صالح من Mistral.');
-
-    let content = msg.content;
-    if(Array.isArray(content)){
-      content = content
-        .filter(chunk => chunk && (chunk.type === 'text' || chunk.text))
-        .map(chunk => chunk.text || '')
-        .join('');
+    if(!msg || !msg.content){
+      throw new Error('لم يصل رد صالح من Groq.');
     }
-    if(typeof content !== 'string' || !content.trim()){
-      throw new Error('رد فارغ من Mistral (قد يكون المحتوى مفلتراً).');
-    }
-    return content.trim();
+    return msg.content.trim();
   }
 
   async function callGemini(c, msgs){
@@ -1195,8 +1188,8 @@ ${c.personality || 'شخصية ودودة عادية.'}
     }
     sel.value = state.model;
     const helpEl = document.getElementById('apiKeyHelp');
-    if(state.provider === 'mistral'){
-      helpEl.innerHTML = 'يُحفظ فقط في متصفحك. مفتاح Mistral: <a href="https://console.mistral.ai/api-keys" target="_blank" style="color:var(--accent);">console.mistral.ai</a>';
+    if(state.provider === 'groq'){
+      helpEl.innerHTML = 'يُحفظ فقط في متصفحك. مفتاح Groq: <a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent);">console.groq.com/keys</a>';
     }else{
       helpEl.innerHTML = 'يُحفظ فقط في متصفحك. مفتاح Gemini: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent);">aistudio.google.com</a>';
     }
@@ -1243,7 +1236,7 @@ ${c.personality || 'شخصية ودودة عادية.'}
     document.getElementById('chatSettingsBtn').addEventListener('click', openChatSettings);
     document.getElementById('regenBtn').addEventListener('click', regenerateLast);
 
-       document.querySelectorAll('#charOverlay .modal-tab').forEach(t => {
+    document.querySelectorAll('#charOverlay .modal-tab').forEach(t => {
       t.addEventListener('click', () => switchCharTab(t.dataset.tab));
     });
 
